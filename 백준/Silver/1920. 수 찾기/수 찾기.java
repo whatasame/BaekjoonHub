@@ -26,7 +26,10 @@ public class Main {
         Arrays.sort(nArr);
         StringBuilder sb = new StringBuilder();
         for (int target : mArr) {
-            int result = binarySearch(nArr, target); // find target in nArr
+            int index = Arrays.binarySearch(nArr, target); // find target in nArr
+
+            int result = index >= 0 ? 1 : 0; // true: index == target index, false: index == insertion point + 1
+
             sb.append(result).append('\n');
         }
 
@@ -34,26 +37,6 @@ public class Main {
         System.out.println(sb);
 
         br.close();
-    }
-
-    private static int binarySearch(int[] arr, int target) {
-        /* NOTE: arr must be sorted */
-        int left = 0;
-        int right = arr.length - 1;
-
-        while (left <= right) {
-            int mid = (left + right) / 2;
-
-            if (arr[mid] > target) {
-                right = mid - 1;
-            } else if (arr[mid] < target) {
-                left = mid + 1;
-            } else {
-                return 1;
-            }
-        }
-
-        return 0; // target not found!
     }
 
 }
