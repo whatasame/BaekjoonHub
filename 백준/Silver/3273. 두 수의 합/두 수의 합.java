@@ -22,10 +22,7 @@ public class Main {
 
             /* Find pair number */
             int pair = X - num;
-            if (pair < 0) { // num > X
-                continue;
-            }
-            if (isExist[pair]) {
+            if (pair > 0 && isExist[pair]) { // Check pair exist
                 pairCount++;
             }
 
