@@ -24,10 +24,7 @@ public class Main {
             }
             setCount = Math.max(setCount, count[i]);
         }
-        int count6and9 = count[6] + count[9];
-        count6and9 = count6and9 % 2 == 0 ? count6and9 / 2 : count6and9 / 2 + 1;
-
-        setCount = Math.max(setCount, count6and9);
+        setCount = Math.max(setCount, ((count[6] + count[9] + 1) / 2)); // +1: round
 
         /* Print result */
         System.out.println(setCount);
