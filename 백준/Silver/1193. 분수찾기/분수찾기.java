@@ -20,23 +20,18 @@ public class Main {
     private static String solution(int N) {
         /* Move to the level which exist Nth fraction */
         int num = 0, level = 1;
-        while (num < N) { // Move (target level + 1)
+        while (num + level < N) {
             num += level++;
         }
-        num -= (level - 1); // Back to target level
 
         /* Move to the Nth fraction */
-        int count = 0;
-        while (num != N) {
-            num++;
-            count++;
-        }
+        int count = N - num;
 
         /* Generate Nth fraction */
         if (level % 2 == 0) {
-            return String.format("%d/%d", level - count, count);
+            return String.format("%d/%d", count, level + 1 - count);
         } else {
-            return String.format("%d/%d", count, level - count);
+            return String.format("%d/%d", level + 1 - count, count);
         }
 
     }
