@@ -21,29 +21,29 @@ public class Main {
     private static char solution(String word) {
         char[] charArr = word.toUpperCase().toCharArray();
 
-        /* Init count arr */
-        int[] counts = new int[26];
+        /* Init map */
+        Map<Character, Integer> countMap = new HashMap<>();
 
         /* Count character */
         for (char c : charArr) {
-            counts[c - 'A']++;
+            countMap.put(c, countMap.getOrDefault(c, 0) + 1);
         }
 
-        /* Get max char */
+        /* Find maxCount */
         int maxCount = 0;
-        for (int count : counts) {
-            maxCount = Math.max(count, maxCount);
+        for (Map.Entry<Character, Integer> entry : countMap.entrySet()) {
+            maxCount = Math.max(maxCount, entry.getValue());
         }
 
-        /* Get max char list */
+        /* Find maxCount character */
         List<Character> charList = new ArrayList<>();
-        for (int i = 0; i < 26; i++) {
-            if (counts[i] == maxCount) {
-                charList.add((char) (i + 'A'));
+        for (Map.Entry<Character, Integer> entry : countMap.entrySet()) {
+            if (entry.getValue() == maxCount) {
+                charList.add(entry.getKey());
             }
         }
 
-        /* Return char */
+        /* Return character */
         if (charList.size() == 1) {
             return charList.get(0);
         } else {
