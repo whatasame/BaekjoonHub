@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -30,17 +31,12 @@ public class Main {
     }
 
     private static List<Integer> solution(int[] positions) {
-        /* 좌표 배열 정렬*/
-        int[] sortedPositions = Arrays.copyOf(positions, positions.length);
-        Arrays.sort(sortedPositions);
-
         /* 중복 제거 배열 생성 */
-        List<Integer> distinctPositions = new ArrayList<>();
-        for (int i = 0; i < sortedPositions.length; i++) {
-            if (i == 0 || sortedPositions[i - 1] != sortedPositions[i]) {
-                distinctPositions.add(sortedPositions[i]);
-            }
-        }
+        List<Integer> distinctPositions = Arrays.stream(positions)
+                .distinct()
+                .sorted()
+                .boxed()
+                .collect(Collectors.toList());
 
         /* 중복 제거 배열의 좌표에 대하여 정렬된 좌표 배열의 lowerBound 계산 */
         List<Integer> lowerBoundList = new ArrayList<>();
