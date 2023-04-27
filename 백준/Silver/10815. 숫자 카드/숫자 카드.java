@@ -8,10 +8,10 @@ public class Main {
 
         /* 입력 */
         final int N = Integer.parseInt(br.readLine());
-        int[] owns = new int[N];
+        HashSet<Integer> owns = new HashSet<>(); // 중복 없으므로 Set 이용
         StringTokenizer st = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < N; i++) {
-            owns[i] = Integer.parseInt(st.nextToken());
+            owns.add(Integer.parseInt(st.nextToken()));
         }
         final int M = Integer.parseInt(br.readLine());
         int[] targets = new int[M];
@@ -26,12 +26,10 @@ public class Main {
         br.close();
     }
 
-    private static String solution(int[] owns, int[] targets) {
-        Arrays.sort(owns);
-
+    private static String solution(Set<Integer> owns, int[] targets) {
         StringBuilder sb = new StringBuilder();
         for (int target : targets) {
-            int result = Arrays.binarySearch(owns, target) >= 0 ? 1 : 0;
+            int result = owns.contains(target) ? 1 : 0;
             sb.append(result).append(' ');
         }
 
