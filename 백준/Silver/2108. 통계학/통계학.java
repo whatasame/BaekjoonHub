@@ -1,21 +1,6 @@
 import java.util.*;
 import java.io.*;
 
-/* 추가 테스트 케이스
-6
-10
-10
-20
-20
-20
-30
-result:
-18
-20
-20
-20
-*/
-
 public class Main {
 
     public static void main(String[] args) throws IOException {
@@ -55,28 +40,24 @@ public class Main {
         result[1] = data[N / 2];
 
         // 최빈값 구하기
-        Map<Integer, Integer> freq = new HashMap<>();
+        int[] freq = new int[8002]; // -4000 to 4000
+        int maxFreq = 0;
         for (int datum : data) {
-            freq.put(datum, freq.getOrDefault(datum, 0) + 1);
+            int idx = datum + 4000;
+            freq[idx]++;
+            maxFreq = Math.max(maxFreq, freq[idx]);
         }
-        Set<Map.Entry<Integer, Integer>> entrySet = freq.entrySet();
-        Queue<Map.Entry<Integer, Integer>> heap = new PriorityQueue<>((e1, e2) -> {
-            if (e1.getValue().equals(e2.getValue())) {
-                return e1.getKey() - e2.getKey();
-            }
-            return e2.getValue() - e1.getValue();
-        });
-        for (Map.Entry<Integer, Integer> entry : entrySet) {
-            heap.offer(entry);
-        }
-        Map.Entry<Integer, Integer> first = heap.poll();
-        result[2] = first.getKey();
-        if (!heap.isEmpty()) {
-            Map.Entry<Integer, Integer> second = heap.poll();
-            if (first.getValue().equals(second.getValue())) {
-                result[2] = second.getKey();
+        boolean hasSameFreq = false;
+        for (int i = 0; i < freq.length; i++) {
+            if (freq[i] == maxFreq) {
+                result[2] = i - 4000;
+                if (hasSameFreq) {
+                    break;
+                }
+                hasSameFreq = true;
             }
         }
+
 
         // 범위 구하기
         result[3] = data[N - 1] - data[0];
