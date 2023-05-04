@@ -1,6 +1,7 @@
 N, M = input().split()
 
-sum_n = sum(map(int, list(N)))
-sum_m = sum(map(int, list(M)))
+# map의 매개변수는 iterable
+sum_n = sum(map(int, N))
+sum_m = sum(map(int, M))
 
 print(sum_n * sum_m)
