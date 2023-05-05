@@ -5,34 +5,33 @@ from collections import deque
 
 
 def bfs():
-    min_cost = 0  # 최소 시간
     cnt = 0  # 등장 횟수
     q = deque()
-    q.append((N, 0))  # (위치, 시간)
+    q.append(N)
 
     while q:
-        now = q.popleft()
-        visited[now[0]] = True
+        pos = q.popleft()
 
         # 도착 검사
-        if now[0] == K:
-            if not min_cost:  # 처음으로 도착
-                min_cost = now[1]
-                cnt += 1
-            elif now[1] == min_cost:  # 최소 거리일 경우
-                cnt += 1
+        if pos == K:
+            cnt += 1
+            continue # 예외 케이스: 5 5
 
         # 이동
-        for moved in (now[0] + 1, now[0] - 1, now[0] * 2):
-            if 0 <= moved <= MAX and not visited[moved]:
-                q.append((moved, now[1] + 1))
+        for new_pos in (pos + 1, pos - 1, pos * 2):
+            if 0 <= new_pos <= MAX and \
+                    (cost[new_pos] == cost[pos] + 1  # 같은 depth에서 넣은 것
+                     or not cost[new_pos]):
+                q.append(new_pos)
+                cost[new_pos] = cost[pos] + 1
 
-    return min_cost, cnt
+    return cnt
 
 
 N, K = map(int, input().split())
 MAX = 100000
-visited = [False] * (MAX + 1)
-answer = bfs()
+cost = [0] * (MAX + 1)
 
-print(answer[0], answer[1], sep='\n')
+count = bfs()
+
+print(cost[K], count, sep='\n')
