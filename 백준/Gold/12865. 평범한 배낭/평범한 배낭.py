@@ -2,7 +2,9 @@
 
 if __name__ == "__main__":
     N, K = map(int, input().split())
-    item = [(0, 0)] + [tuple(map(int, input().split())) for _ in range(N)]
+    item = [(0, 0)]
+    for _ in range(N):
+        item.append(tuple(map(int, input().split())))
 
     dp = [[0 for _ in range(K + 1)] for _ in range(N + 1)]
     for i in range(1, N + 1):
