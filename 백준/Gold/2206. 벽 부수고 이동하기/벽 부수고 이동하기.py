@@ -14,6 +14,7 @@
 0000
 """
 
+import sys
 from collections import deque
 
 
@@ -52,7 +53,7 @@ def bfs():
 
 if __name__ == "__main__":
     # 입력
-    N, M = map(int, input().split())
+    N, M = map(int, sys.stdin.readline().split())
     arr = [list(map(int, input())) for _ in range(N)]
 
     # 해결
