@@ -19,14 +19,7 @@ public class Main {
     static AbsNum[] nums;
 
     public static List<Integer> run() {
-        PriorityQueue<AbsNum> pq = new PriorityQueue<>(
-                (num1, num2) -> {
-                    if (num1.value == num2.value) {
-                        return num1.positive - num2.positive;
-                    }
-                    return num1.value - num2.value;
-                }
-        );
+        PriorityQueue<AbsNum> pq = new PriorityQueue<>();
 
         List<Integer> answer = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -62,18 +55,27 @@ public class Main {
         System.out.println(sb);
     }
 
-    public static class AbsNum {
+    public static class AbsNum implements Comparable<AbsNum> {
 
-        int positive;
+        int sign;
         int value;
 
         public AbsNum(int num) {
-            this.positive = num > 0 ? 1 : -1;
+            this.sign = num > 0 ? 1 : -1;
             this.value = Math.abs(num);
         }
 
         public int toInt() {
-            return value * positive;
+            return value * sign;
+        }
+
+        @Override
+        public int compareTo(AbsNum other) {
+            if (this.value == other.value) {
+                return this.sign - other.sign;
+            }
+
+            return this.value - other.value;
         }
     }
 }
