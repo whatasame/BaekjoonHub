@@ -18,23 +18,23 @@ public class Main {
     static int n;
     static AbsNum[] nums;
 
-    public static List<Integer> run() {
+    public static StringBuilder run() {
         PriorityQueue<AbsNum> pq = new PriorityQueue<>();
 
-        List<Integer> answer = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) {
             if (nums[i].value == 0) { // pop
                 if (pq.isEmpty()) {
-                    answer.add(0);
+                    sb.append("0\n");
                 } else {
-                    answer.add(pq.remove().toInt());
+                    sb.append(pq.remove().toInt()).append('\n');
                 }
             } else { // push
                 pq.add(nums[i]);
             }
         }
 
-        return answer;
+        return sb;
     }
 
     public static void main(String[] args) throws Exception {
@@ -46,12 +46,8 @@ public class Main {
             nums[i] = new AbsNum(num);
         }
 
-        List<Integer> answer = run();
+        StringBuilder sb = run();
 
-        StringBuilder sb = new StringBuilder();
-        for (int num : answer) {
-            sb.append(num).append('\n');
-        }
         System.out.println(sb);
     }
 
