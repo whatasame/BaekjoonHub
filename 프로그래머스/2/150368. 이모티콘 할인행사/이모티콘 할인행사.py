@@ -12,34 +12,29 @@
 from itertools import product
 
 def solution(users, emoticons):
-    ratio = [10, 20, 30, 40]
-    max_subscriber = 0
-    max_price = 0
+    ratio = (10, 20, 30, 40)
+    max_subscriber, max_price = 0, 0
     
     # 모든 할인율의 경우의 수에 대하여 
     for ratios in product(ratio, repeat = len(emoticons)):
-        total_subscriber = 0
-        total_price = 0
+        total_subscriber, total_price = 0, 0
         
-        # 할인된 이모티콘 가격 계산
-        saled = [] # (할인율, 할인가격)
-        for i in range(len(emoticons)):
-            sale_ratio = (100 - ratios[i]) / 100
-            saled.append((ratios[i], emoticons[i] * sale_ratio))
-            
+        # 모든 유저들의
         for user_ratio, user_price in users:
-            # 유저별 구매비용 계산
-            purchased_price = sum([sale_price for sale_ratio, sale_price in saled if sale_ratio >= user_ratio])
+            # 구매 금액을 구한다.
+            purchased_price = 0
+            for ratio, price in zip(ratios, emoticons):
+                if (ratio >= user_ratio):
+                    purchased_price += price * (100 - ratio) / 100
             
-            # 가입자수, 판매액 계산
+            # 구독자와 매출액을 계산
             if purchased_price >= user_price:
                 total_subscriber += 1
             else:
                 total_price += purchased_price
-            
+
         # 최대 업데이트
-        if total_subscriber > max_subscriber or (total_subscriber == max_subscriber and total_price > max_price):
-            max_subscriber, max_price = total_subscriber, total_price
+        max_subscriber, max_price = max((max_subscriber, max_price), (total_subscriber, total_price))
                     
     # 가입자수, 판매액 반환
     return [max_subscriber, max_price]
