@@ -10,15 +10,9 @@ def solution(places):
     
     # 모든 대기실에 대하여
     for place in places:
-        if check(place):
-            answer.append(1)
-        else:
-            answer.append(0)
+        answer.append(check(place))
             
     return answer
-    
-
-        
 
 def check(place):
     row_len, col_len = len(place), len(place[0])
@@ -27,12 +21,12 @@ def check(place):
     for r in range(row_len):
         for c in range(col_len):
             # 사람이면 BFS(상, 하, 좌, 우)로 가장 가까운 사람의 거리 찾기
-            # 거리가 2 이상이면 거리두기 X
+            # 거리가 2 이하이면 거리두기 X (거리 0 == 사람 없음)
             if place[r][c] == "P" and 1 <= bfs(place, r, c) <= 2:
-                    return False
+                    return 0
     
     # 거리두기 O
-    return True
+    return 1
         
 def bfs(place, row, col):
     row_len, col_len = len(place), len(place[0])
