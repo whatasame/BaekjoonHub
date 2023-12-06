@@ -24,13 +24,12 @@ nums = list(map(int, input().split()))
 
 
 def solution(n, k, nums):
-    # 이분 탐색 경계: 그룹 원소가 1개인 경우 ~ 그룹 원소가 전체인 경우
+    # 이분 탐색 경계: 그룹 원소가 1개인 경우(가능한 최솟값) ~ 그룹 원소가 전체인 경우(가능한 최댓값)
     left, right = min(nums), sum(nums)
 
     # 이분 탐색의 경계가 교차하지 않을 때까지
-    answer = 0
     while left <= right:
-        # middle: 가장 작은 그룹합의 최대값
+        # middle: 가능한지 확인하려는 최소 그룹합
         middle = (left + right) // 2
 
         # middle과 같거나 클때까지 더한 후
@@ -43,17 +42,15 @@ def solution(n, k, nums):
                 section_sum = 0
                 section_count += 1
 
-        # 그룹의 개수가 k보다 크면 middle은 가능한 최대값
+        # 그룹의 개수가 k보다 크면 middle + 1도 가능한지 검사
         if section_count >= k:
-            # 저장하고 middle + 1도 가능한지 검사
-            answer = middle
             left = middle + 1
-        # 그렇지 않으면 middle은 불가능한 값
+        # 그렇지 않으면 middle은 불가능한 값, middle - 1이 가능한지 검사
         else:
-            # middle - 1이 가능한지 검사
             right = middle - 1
 
-    return answer
+    # right: 가능한 최댓값 반환
+    return right
 
 
 answer = solution(n, k, nums)
