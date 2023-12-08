@@ -6,7 +6,7 @@
         # 추천 횟수가 가장 적은 학생이 두 명 이상이면 오래된 사진 삭제
         # 삭제한다면 추천 횟수 0으로 초기화
         
-import sys, heapq
+import sys
 
 input = sys.stdin.readline
 n = int(input())
