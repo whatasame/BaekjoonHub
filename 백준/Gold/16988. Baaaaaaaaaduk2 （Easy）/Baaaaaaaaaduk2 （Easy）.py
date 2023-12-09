@@ -1,0 +1,108 @@
+# 한 턴에 2알씩 둔다.
+# 그룹: 상하좌우로 인접한 같은 색
+# 그룹의 돌 중 빈 칸과 인접한 돌이 하나도 없으면 죽음
+# 스스로 잡히는 곳에도 둘 수 있다. 이때, 조건만 맞다면 다른 돌을 죽일 수 있다.
+
+# 진행중인 바둑판이 주어진다.
+# 돌 2개를 둘 때, 최대로 죽일 수 있는 알의 개수를 출력
+
+# 0: 빈칸
+# 1: 나
+# 2: 상대
+
+"""
+(1칸 1칸), (2칸) 중 전자가 최대
+4 4
+2 1 2 2
+2 1 1 0
+0 0 0 1
+0 0 2 2
+-> 4
+
+(1칸 1칸), (2칸) 중 후자가 최대
+4 4
+2 1 1 2
+2 1 0 0
+2 0 0 0
+0 0 1 2
+-> 3
+(1칸 1칸)으로 최대
+-> 예제 5
+
+(2칸)으로 최대
+-> 예제 4
+
+부족해서 0인 경우
+-> 예제 2
+"""
+
+import sys
+from collections import deque, defaultdict
+
+input = sys.stdin.readline
+n, m = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(n)]
+
+
+def solution(n, m, board):
+    visited = [[False for _ in range(m)] for _ in range(n)]
+
+    candidates = defaultdict(int)
+    for r in range(n):
+        for c in range(m):
+            if not visited[r][c] and board[r][c] == 2:
+                blank, count = bfs(board, visited, r, c)  # 인접한 빈 칸 개수, 그룹 내 바둑알 개수
+                candidates[blank] += count
+
+    twos = [k for k, v in candidates.items() if len(k) == 2]
+    ones = [k for k, v in candidates.items() if len(k) == 1]
+
+    choose_two, choose_one = 0, 0
+    if twos:
+        p1, p2 = max(twos, key=lambda x: candidates[x])
+        choose_two = candidates[frozenset([p1, p2])] + candidates[frozenset([p1])] + candidates[frozenset([p2])]
+    if ones:
+        choose_one = sum(sorted(map(lambda x: candidates.get(x), ones), reverse = True)[:2])
+
+    return max(choose_two, choose_one)
+
+
+def bfs(board, visited, sr, sc):
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+    n, m = len(board), len(board[0])
+
+    blank = set()
+    count = 1
+
+    q = deque()
+    q.append((sr, sc))
+    is_one = [[False for _ in range(m)] for _ in range(n)]
+    visited[sr][sc] = True
+
+    while q:
+        r, c = q.popleft()
+
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+
+            if nr < 0 or nr >= n or nc < 0 or nc >= m or visited[nr][nc] or is_one[nr][nc]:
+                continue
+
+            if board[nr][nc] == 0:
+                blank.add((nr, nc))
+                is_one[nr][nc] = True
+
+            if board[nr][nc] == 1:
+                visited[nr][nc] = True
+
+            if board[nr][nc] == 2:
+                count += 1
+                q.append((nr, nc))
+                visited[nr][nc] = True
+
+    return frozenset(blank), count
+
+
+answer = solution(n, m, board)
+
+print(answer)
