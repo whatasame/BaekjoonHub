@@ -43,6 +43,8 @@ input = sys.stdin.readline
 n, m = map(int, input().split())
 board = [list(map(int, input().split())) for _ in range(n)]
 
+directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
 
 def solution(n, m, board):
     visited = [[False for _ in range(m)] for _ in range(n)]
@@ -51,32 +53,28 @@ def solution(n, m, board):
     for r in range(n):
         for c in range(m):
             if not visited[r][c] and board[r][c] == 2:
-                blank, count = bfs(board, visited, r, c)  # 인접한 빈 칸 개수, 그룹 내 바둑알 개수
-                candidates[blank] += count
+                blanks, count = bfs(board, visited, r, c)  # 채워야하는 빈 칸들의 좌표, 그룹 내 바둑알 개수
+                if len(blanks) <= 2:
+                    candidates[blanks] += count
 
-    twos = [k for k, v in candidates.items() if len(k) == 2]
-    ones = [k for k, v in candidates.items() if len(k) == 1]
+    twos = [k for k in candidates.keys() if len(k) == 2]
+    ones = [k for k in candidates.keys() if len(k) == 1]
 
     choose_two, choose_one = 0, 0
     if twos:
         p1, p2 = max(twos, key=lambda x: candidates[x])
         choose_two = candidates[frozenset([p1, p2])] + candidates[frozenset([p1])] + candidates[frozenset([p2])]
     if ones:
-        choose_one = sum(sorted(map(lambda x: candidates.get(x), ones), reverse = True)[:2])
+        choose_one = sum(sorted(map(lambda x: candidates.get(x), ones), reverse=True)[:2])
 
     return max(choose_two, choose_one)
 
 
 def bfs(board, visited, sr, sc):
-    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-    n, m = len(board), len(board[0])
-
-    blank = set()
-    count = 1
+    blanks, count = set(), 1
 
     q = deque()
     q.append((sr, sc))
-    is_one = [[False for _ in range(m)] for _ in range(n)]
     visited[sr][sc] = True
 
     while q:
@@ -85,12 +83,11 @@ def bfs(board, visited, sr, sc):
         for dr, dc in directions:
             nr, nc = r + dr, c + dc
 
-            if nr < 0 or nr >= n or nc < 0 or nc >= m or visited[nr][nc] or is_one[nr][nc]:
+            if nr < 0 or nr >= n or nc < 0 or nc >= m or visited[nr][nc]:
                 continue
 
-            if board[nr][nc] == 0:
-                blank.add((nr, nc))
-                is_one[nr][nc] = True
+            if board[nr][nc] == 0 and (nr, nc) not in blanks:
+                blanks.add((nr, nc))
 
             if board[nr][nc] == 1:
                 visited[nr][nc] = True
@@ -100,7 +97,7 @@ def bfs(board, visited, sr, sc):
                 q.append((nr, nc))
                 visited[nr][nc] = True
 
-    return frozenset(blank), count
+    return frozenset(blanks), count
 
 
 answer = solution(n, m, board)
