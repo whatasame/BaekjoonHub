@@ -47,35 +47,37 @@ directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
 
 def solution(n, m, board):
-    visited = [[False for _ in range(m)] for _ in range(n)]
-
+    # 상대방 바둑알 그룹 찾기
     candidates = defaultdict(int)
+    visited = [[False for _ in range(m)] for _ in range(n)]
     for r in range(n):
         for c in range(m):
             if not visited[r][c] and board[r][c] == 2:
-                blanks, count = bfs(board, visited, r, c)  # 채워야하는 빈 칸들의 좌표, 그룹 내 바둑알 개수
+                blanks, count = bfs(board, visited, r, c)
                 if len(blanks) <= 2:
                     candidates[blanks] += count
 
+    # (1칸, 1칸), (2칸) 분리
     twos = [k for k in candidates.keys() if len(k) == 2]
     ones = [k for k in candidates.keys() if len(k) == 1]
 
-    choose_two, choose_one = 0, 0
+    # (1칸, 1칸), (2칸) 선택 시 최대 개수 구하기
+    choose_one, choose_two = 0, 0
+    if ones:
+        choose_one = sum(sorted(map(lambda x: candidates[x], ones), reverse=True)[:2])
     if twos:
         p1, p2 = max(twos, key=lambda x: candidates[x])
         choose_two = candidates[frozenset([p1, p2])] + candidates[frozenset([p1])] + candidates[frozenset([p2])]
-    if ones:
-        choose_one = sum(sorted(map(lambda x: candidates.get(x), ones), reverse=True)[:2])
 
-    return max(choose_two, choose_one)
+    return max(choose_one, choose_two)
 
 
 def bfs(board, visited, sr, sc):
-    blanks, count = set(), 1
+    blanks, count = set(), 1  # 채워야하는 빈 칸들의 좌표, 그룹 내 바둑알 개수
 
     q = deque()
     q.append((sr, sc))
-    visited[sr][sc] = True
+    visited[sr][sc] = True  # 방문 처리
 
     while q:
         r, c = q.popleft()
@@ -83,12 +85,15 @@ def bfs(board, visited, sr, sc):
         for dr, dc in directions:
             nr, nc = r + dr, c + dc
 
+            # 방문 가능 검사
             if nr < 0 or nr >= n or nc < 0 or nc >= m or visited[nr][nc]:
                 continue
 
+            # 빈 칸 기록 -> 중복 방문 허용
             if board[nr][nc] == 0 and (nr, nc) not in blanks:
                 blanks.add((nr, nc))
 
+            # 상대 바둑알 세기
             if board[nr][nc] == 1:
                 visited[nr][nc] = True
 
