@@ -8,11 +8,7 @@ def solution(board, moves):
     # 화면을 세로로 n개의 스택으로 변환
     stacks = [[ ]]
     for c in range(n):
-        stack = []
-        for r in reversed(range(n)):
-            if not board[r][c]:
-                continue
-            stack.append(board[r][c])
+        stack = [board[r][c] for r in reversed(range(n)) if board[r][c] != 0]
         stacks.append(stack)
             
     # 바구니 스택 선언
@@ -20,23 +16,24 @@ def solution(board, moves):
     
     # 뽑아서 넣고 터트리기
     for move in moves:
-        doll = pop(stacks, move)
+        doll = pop(stacks[move])
         if not doll:
             continue
-        basket_doll = peek(basket)
-        if doll == basket_doll:
+            
+        if doll == peek(basket):
             answer += 2
             basket.pop()
-        else:
-            basket.append(doll)
+            continue
+            
+        basket.append(doll)
     
     return answer
 
-def pop(stacks, idx):
-    if not stacks[idx]:
+def pop(stack):
+    if not stack:
         return None 
     
-    return stacks[idx].pop()
+    return stack.pop()
 
 def peek(basket):
     if not basket:
