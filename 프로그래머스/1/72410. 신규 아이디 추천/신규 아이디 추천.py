@@ -10,26 +10,22 @@ def solution(new_id):
     new_id = new_id.lower()
     
     # 2단계
-    pattern = re.compile(r'[^a-z\d\-\_\.]')
-    new_id = re.sub(pattern, '', new_id)
+    new_id = re.sub('[^a-z\d\-\_\.]', '', new_id)
 
     # 3단계
-    pattern = re.compile(r'\.{2,}')
-    new_id = re.sub(pattern, '.', new_id)
+    new_id = re.sub('\.+', '.', new_id)
     
     # 4단계
-    pattern = re.compile(r'^\.|\.$')
-    new_id = re.sub(pattern, '', new_id)
+    new_id = re.sub('^\.|\.$', '', new_id)
     
     # 5단계
     if not new_id:
         new_id = "a"
     
     # 6단계
-    if len(new_id) >= 16:
-        new_id = new_id[:15]
-        if new_id[-1] == ".":
-            new_id = new_id[:-1]
+    new_id = new_id[:15]
+    if new_id[-1] == ".":
+        new_id = new_id[:-1]
     
     # 7단계
     while len(new_id) <= 2:
