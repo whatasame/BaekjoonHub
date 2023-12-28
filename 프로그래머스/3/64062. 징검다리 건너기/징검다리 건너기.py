@@ -4,19 +4,20 @@
 
 # 디딤돌 당 밟을 수 있는 최대 횟수: 2억
 
-# k = 1, 최소 횟수만큼 이동할 수 있다?
+# 밟지 못하는 디딤돌이 k개 있으면 못 건넌다.
 
 def solution(stones, k):
     left, right = 1, 200_000_000
     
     answer = None
     while left <= right:
-        middle = (left + right) // 2
+        middle = (left + right + 1) // 2
         
-        if movable(pre_run(stones, middle), k):
+        # middle - 1번째 친구가 건넜다고 가정했을 때 움직일 수 있다면
+        if movable(run(stones, middle - 1), k):
+            answer = middle
             left = middle + 1
         else:
-            answer = middle
             right = middle - 1
             
     return answer
@@ -33,5 +34,5 @@ def movable(stones, k):
         
     return True
         
-def pre_run(stones, m):
+def run(stones, m):
     return [stone - m if stone >= m else 0 for stone in stones]
