@@ -18,11 +18,11 @@
 """
 
 def solution(n, lost, reserve):
-    lost, reserve = set(lost), set(reserve)
+    _lost, _reserve = set(lost), set(reserve)
     
     # 여벌 가져왔으면서 도난당한 학생 제외
-    remain = reserve - lost
-    lost -= reserve
+    reserve = {num for num in _reserve if not num in _lost}
+    lost = {num for num in _lost if not num in _reserve}
     
     # 1번부터 N번까지
     answer = 0
@@ -34,8 +34,8 @@ def solution(n, lost, reserve):
             
         # i - 1, i + 1번째 순서로 체육복 빌리기
         for k in [i - 1, i + 1]:
-            if k in remain:
-                remain.remove(k)
+            if k in reserve:
+                reserve.remove(k)
                 answer += 1
                 break
                 
