@@ -78,15 +78,5 @@ def nomalize(block):
     
     return {(r - br, c - bc) for r, c in block}
                 
-def rotate(_arr):
-    n = len(_arr)
-    arr = deepcopy(_arr)
-    
-    for r in range(n):
-        for c in range(n):
-            arr[c][n - 1 - r] = _arr[r][c]
-            
-    return arr
-    
-    
-    
+def rotate(arr):
+    return [list(reversed(row)) for row in zip(*arr)]    
