@@ -22,29 +22,14 @@ cases = [tuple(map(int, input().split())) for _ in range(k)]
 
 def solution(board, cases):
     # 행, 열 누적합 배열 선언
-    row = [[0 for _ in range(m + 1)] for _ in range(n + 1)] # row[n][m] -> n행의 m번째 행까지 합
-    col = [[0 for _ in range(m + 1)] for _ in range(n + 1)] # col[n][m] -> m열의 n번째 행까지 합
+    dp = [[0 for _ in range(m + 1)] for _ in range(n + 1)]
 
     # 누적합 초기화
     for r in range(1, n + 1):
         for c in range(1, m + 1):
-            row[r][c] = board[r - 1][c - 1] + row[r][c - 1]
-    for c in range(1, m + 1):
-        for r in range(1, n + 1):
-            col[r][c] = board[r - 1][c - 1] + col[r - 1][c]
+            dp[r][c] = board[r - 1][c - 1] + dp[r - 1][c] + dp[r][c - 1] - dp[r - 1][c - 1]
 
-    # 각 케이스 계산
-    answer = []
-    for case in cases:
-        sr, sc, er, ec = case
-
-        result = sum(row[r][m] for r in range(er + 1))
-        result -= sum(col[er][c] for c in range(sc))
-        result -= sum(col[er][c] for c in range(ec + 1, m + 1))
-        result -= sum(row[r][ec] - row[r][sc - 1] for r in range(sr))
-
-        answer.append(result)
-
-    return answer
+    # 케이스 구하기
+    return [dp[er][ec] - dp[sr - 1][ec] - dp[er][sc - 1] + dp[sr - 1][sc - 1] for sr, sc, er, ec in cases]
 
 print("\n".join(map(str, solution(board, cases))))
