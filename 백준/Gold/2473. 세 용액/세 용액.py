@@ -19,17 +19,20 @@ def solution(n, _stats):
 
     # 숫자 하나를 선택한다 -> O(n)
     answer = (stats[0], stats[1], stats[2])
+    result = sum(answer)
     for first in range(n - 2):
         # 선택한 숫자 뒤의 리스트의 양 끝을 투포인터로 선언
         second, third = first + 1, n - 1
         while second < third: # 투포인터가 마주칠 때까지 -> O(n)
             # 갱신
             tmp = (stats[first], stats[second], stats[third])
-            if abs(sum(tmp)) < abs(sum(answer)):
+            tmp_sum = sum(tmp)
+            if abs(tmp_sum) < abs(result):
                 answer = tmp
+                result = tmp_sum
 
-            # 투포인터의 합이 0이 되도록 이동
-            if sum(tmp) < 0:
+            # 투포인터의 합이 0에 가깝게 되도록 이동
+            if tmp_sum < 0:
                 second += 1
             else:
                 third -= 1
