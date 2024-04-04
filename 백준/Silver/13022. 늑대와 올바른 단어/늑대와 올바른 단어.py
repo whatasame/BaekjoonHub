@@ -28,8 +28,7 @@ wolfff
 """
 
 import sys, re
-
-from collections import deque
+from collections import Counter
 
 input = lambda:sys.stdin.readline().strip()
 
@@ -41,8 +40,9 @@ def solution(string):
     if "".join(chunks) != string:
         return 0
 
+    # 각 청크의 모든 글자의 개수가 같은지 확인
     for chunk in chunks:
-        if not (chunk.count('w') == chunk.count('o') == chunk.count('l') == chunk.count('f')):
+        if len(set(Counter(chunk).values())) != 1:
             return 0
 
     return 1
