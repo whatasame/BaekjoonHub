@@ -20,45 +20,24 @@ def run(origin, target):
         if num == target:
             return commands
 
-        d_num = d(num)
+        d_num = num * 2 % 10_000
         if not visited[d_num]:
             visited[d_num] = True
             q.append((d_num, commands + "D"))
 
-        s_num = s(num)
+        s_num = 9_999 if num == 0 else num - 1
         if not visited[s_num]:
             visited[s_num] = True
             q.append((s_num, commands + "S"))
 
-        l_num = l(num)
+        l_num = num % 1000 * 10 + num // 1000
         if not visited[l_num]:
             visited[l_num] = True
             q.append((l_num, commands + "L"))
 
-        r_num = r(num)
+        r_num = num % 10 * 1000 + num // 10
         if not visited[r_num]:
             visited[r_num] = True
             q.append((r_num, commands + "R"))
-
-
-def d(num):
-    return num * 2 % 10_000
-
-def s(num):
-    return 9_999 if num == 0 else num - 1
-
-def l(num):
-    string = "0000" + str(num)
-    string = string[-4:]
-    string = string[1:] + string[0]
-
-    return int(string)
-
-def r(num):
-    string = "0000" + str(num)
-    string = string[-4:]
-    string = string[-1] + string[:-1]
-
-    return int(string)
-
+            
 print("\n".join(solution(cases)))
