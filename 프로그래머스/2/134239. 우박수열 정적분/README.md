@@ -1,6 +1,6 @@
 # [level 2] 우박수열 정적분 - 134239 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/134239) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/134239?language=java) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 09월 24일 12:57:48
+2024년 09월 24일 12:57:57
 
 ### 문제 설명
 
