@@ -13,16 +13,15 @@ class Solution {
         }
 
         int nxt = capitals.length + 1; // 27
-        String[] split = msg.split("");
         List<Integer> answer = new ArrayList<>();
-        for (int i = 0; i < split.length; i++) {
+        for (int i = 0; i < msg.length(); i++) {
             String sub = null;
-            for (int j = i; j < split.length; j++) {
-                sub = Arrays.stream(split, i, j + 1)
-                        .collect(Collectors.joining(""));
+            for (int j = i; j < msg.length(); j++) {
+                sub = msg.substring(i, j + 1);  // i to j
+                
                 if (!dict.containsKey(sub)) {
                     dict.put(sub, nxt++);
-                    String prev = sub.substring(0, sub.length() - 1);
+                    String prev = msg.substring(i, j); // i to j - 1 = sub - 1
                     answer.add(dict.get(prev));
 
                     i += prev.length() - 1;
