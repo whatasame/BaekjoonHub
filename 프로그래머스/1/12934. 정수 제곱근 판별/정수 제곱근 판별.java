@@ -2,12 +2,10 @@ import java.util.*;
 
 class Solution {
     public long solution(long n) {
-        double result = Math.sqrt(n);
-        if (result % 1 == 0) {
-            long answer = (long) result + 1;
-            return (long) answer * answer;
-        }
-        
-        return -1;
+        long sqrt = (long) Math.sqrt(n);
+
+        if (sqrt * sqrt != n) return -1;
+
+        return (sqrt + 1) * (sqrt + 1);
     }
 }
