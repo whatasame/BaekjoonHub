@@ -4,28 +4,16 @@
 import java.util.*;
 
 class Solution {
-    
-    static int answer = 0;
-    static int target;
-    
     public int solution(int[] numbers, int target) {
-        this.target = target;
-        
-        dfs(numbers, 0, 0);
-
-        return answer;
+        return dfs(numbers, target, 0, 0);
     }
     
-    void dfs(int[] numbers, int i, int tmp) {
-        if (i == numbers.length) {
-            if (tmp == target) {
-                answer += 1;
-            }
-            
-            return;
+    int dfs(int[] numbers, int target, int index, int sum) {
+        if (index == numbers.length) {
+            return sum == target ? 1 : 0;
         }
         
-        dfs(numbers, i + 1, tmp + numbers[i] * 1);
-        dfs(numbers, i + 1, tmp + numbers[i] * -1);
+        return dfs(numbers, target, index + 1, sum + numbers[index]) 
+             + dfs(numbers, target, index + 1, sum - numbers[index]);
     }
 }
