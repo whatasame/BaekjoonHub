@@ -1,56 +1,53 @@
-// 도착하지 못하면 -1 반환
+// (1, 1)에서 (n, m)으로 향하는 최단 경로의 길이
+// 도착하지 못하는 경우 -1 반환
 
 import java.util.*;
+import java.util.stream.*;
 
 class Solution {
-
-    static int n, m;
-    static int[] dr = {0, 0, -1, 1};
-    static int[] dc = {-1, 1, 0, 0};
-
+    
+    // EWSN
+    static int[] dr = {0, 0, 1, -1};
+    static int[] dc = {1, -1, 0, 0};
+    
     public int solution(int[][] maps) {
-        n = maps.length;
-        m = maps[0].length;
-
-        Queue<Pair> q = new LinkedList<>();
-        int[][] costs = new int[n][m];
-        q.add(new Pair(0, 0));
-        costs[0][0] = 1;
-
-        int answer = -1;
-        while (!q.isEmpty()) {
-            Pair now = q.remove();
-
-            if (now.r == n - 1 && now.c == m - 1) {
-                answer = costs[now.r][now.c];
+        int n = maps.length;
+        int m = maps[0].length;
+        
+        Queue<Pair> queue = new LinkedList<>();
+        boolean[][] visited = new boolean[n][m];
+        queue.offer(new Pair(0, 0, 1));
+        visited[0][0] = true;
+        
+        while (!queue.isEmpty()) {
+            Pair current = queue.poll();
+            
+            if (current.r == n - 1 && current.c == m - 1) {
+                return current.cost;
             }
-
+            
             for (int i = 0; i < 4; i++) {
-                int nr = now.r + dr[i];
-                int nc = now.c + dc[i];
-
-                if (oob(nr, nc) || costs[nr][nc] != 0) continue;
-                if (maps[nr][nc] == 0) continue;
-
-                q.add(new Pair(nr, nc));
-                costs[nr][nc] = costs[now.r][now.c] + 1;
+                int nr = current.r + dr[i];
+                int nc = current.c + dc[i];
+                
+                if (nr >= n || nr < 0 || nc >= m || nc < 0) continue;
+                if (maps[nr][nc] == 0 || visited[nr][nc]) continue;
+                
+                queue.offer(new Pair(nr, nc, current.cost + 1));
+                visited[nr][nc] = true;
             }
         }
-
-        return answer;
-
+        
+        return -1;
     }
-
-    boolean oob(int r, int c) {
-        return r < 0 || r >= n || c < 0 || c >= m;
-    }
-
+    
     static class Pair {
-        int r, c;
-
-        Pair(int r, int c) {
+        int r, c, cost;
+        
+        Pair(int r , int c, int cost) {
             this.r = r;
             this.c = c;
+            this.cost = cost;
         }
     }
 }
