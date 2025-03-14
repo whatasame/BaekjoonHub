@@ -12,35 +12,28 @@ class Solution {
     
     public int solution(String begin, String target, String[] words) {
         
-        int w = words.length;
-        
         Queue<Pair> queue = new LinkedList<>();
-        queue.offer(new Pair(begin, new boolean[w]));
+        Set<String> visited = new HashSet<>();
+        queue.offer(new Pair(begin, 0));
+        visited.add(begin);
         
-        int answer = Integer.MAX_VALUE;
         while (!queue.isEmpty()) {
             Pair current = queue.poll();
             
-            if (current.now.equals(target)) {
-                int tmp = 0;
-                for (int i = 0; i < current.visited.length; i++) {
-                    if (current.visited[i]) tmp += 1;
-                }
-                answer = Math.min(answer, tmp);
+            if (current.word.equals(target)) {
+                return current.steps;
             }
             
-            for (int i = 0; i < w; i++) { // O(w)
-                if (current.visited[i]) continue;
-                if (diff(current.now, words[i]) != 1) continue;
+            for (String word: words) { // O(w)
+                if (visited.contains(word)) continue;
+                if (diff(current.word, word) != 1) continue;
                 
-                boolean[] new_visited = Arrays.copyOf(current.visited, current.visited.length);
-                new_visited[i] = true;
-                
-                queue.offer(new Pair(words[i], new_visited));
+                queue.offer(new Pair(word, current.steps + 1));
+                visited.add(word);
             }
         }
         
-        return answer == Integer.MAX_VALUE ? 0 : answer;
+        return 0;
     }
     
     long diff(String s1, String s2) { // O(l * w) = 500
@@ -50,12 +43,12 @@ class Solution {
     }
     
     static class Pair {
-        String now;
-        boolean[] visited;
+        String word;
+        int steps;
         
-        Pair(String now, boolean[] visited) {
-            this.now = now;
-            this.visited = visited;
+        Pair(String word, int steps) {
+            this.word = word;
+            this.steps = steps;
         }
     }
 }
