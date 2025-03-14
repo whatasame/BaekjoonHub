@@ -14,13 +14,35 @@ class Solution {
     
     public int solution(int[][] rectangles, int cx, int cy, int ix, int iy) {
         // 캐릭터가 이동할 수 있는 지도 초기화
-        // 새로운 사각형 내부는 이동 불가
-        // 겹친 점은 이동 가능
-        // 겹치면서 다른 사각형의 내부는 이동 불가
         int[][] map = new int[MAX_LEN][MAX_LEN];
-        for (int i = 0; i < rectangles.length; i++) {
-            draw(map, rectangles[i], i + 1);
+        for (int[] rectangle : rectangles) {
+            // padding
+            int lbx = rectangle[0] * 2; // left bottom
+            int lby = rectangle[1] * 2;
+            int rtx = rectangle[2] * 2; // right top
+            int rty = rectangle[3] * 2;
+
+            // 사각형 전 영역 칠하기
+            for (int x = lbx; x <= rtx; x++) {
+                for (int y = lby; y <= rty; y++) {
+                    map[x][y] = 1;
+                }
+            }
         }
+        for (int[] rectangle : rectangles) {
+            int lbx = rectangle[0] * 2; 
+            int lby = rectangle[1] * 2;
+            int rtx = rectangle[2] * 2;
+            int rty = rectangle[3] * 2;
+
+            // 사각형 내부 비우기
+            for (int x = lbx + 1; x < rtx; x++) {
+                for (int y = lby + 1; y < rty; y++) {
+                    map[x][y] = 0;
+                }
+            }
+        }
+        
         
         // BFS
         cx *= 2; cy *= 2; ix *= 2; iy *= 2; // 길이가 1인 사각형의 내부를 만들기 위한 padding
@@ -44,40 +66,14 @@ class Solution {
                 int ny = y + dy[i];
                 
                 if (nx >= MAX_LEN || nx < 0 || ny >= MAX_LEN || ny < 0) continue;
-                if (map[nx][ny] <= 0 || costs[nx][ny] != 0) continue;
+                if (map[nx][ny] == 0|| costs[nx][ny] != 0) continue;
                 
                 queue.offer(new Pair(nx, ny));
                 costs[nx][ny] = cost + 1;
             }
         }
         
-        
-        return 0;
-    }
-    
-    void draw(int[][] map, int[] rectagle, int value) {
-        // padding
-        int lbx = rectagle[0] * 2; // left bottom
-        int lby = rectagle[1] * 2;
-        int rtx = rectagle[2] * 2; // right top
-        int rty = rectagle[3] * 2;
-        
-        // 내부: -1
-        for (int x = lbx + 1; x < rtx; x++) {
-            for (int y = lby + 1; y < rty; y++) {
-                map[x][y] = -1;
-            }
-        }
-        
-        // 테두리: 1
-        for (int x = lbx; x <= rtx; x++) {
-            map[x][lby] = map[x][lby] == -1 ? -1 : value;
-            map[x][rty] = map[x][rty] == -1 ? -1 : value;
-        }
-        for (int y = lby; y <= rty; y++) {
-            map[lbx][y] = map[lbx][y] == -1 ? -1 : value;
-            map[rtx][y] = map[rtx][y] == -1 ? -1 : value;
-        }
+        return -1;
     }
     
     static class Pair {
