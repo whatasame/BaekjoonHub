@@ -9,52 +9,36 @@ import java.util.stream.*;
 
 class Solution {
     public int solution(int[][] jobs) {
-        int answer = 0;
+        // 요청 시각 빠른 순으로 정렬 O(nlogn);
+        Arrays.sort(jobs, (j1, j2) -> j1[0] - j2[0]);
         
-        Queue<Task> wq = new PriorityQueue<>((t1, t2) -> { // waiting queue
-            if (t1.cost == t2.cost) {
-                if (t1.request == t2.request) {
-                    return t1.num - t2.num;
-                }
-                return t1.request - t2.request;
-            }
-            return t1.cost - t2.cost;
-        });
-        Queue<Task> jq = new PriorityQueue<>((t1, t2) -> t1.request - t2.request); // job queue
-        for (int i = 0; i < jobs.length; i++) {
-            jq.add(new Task(i, jobs[i][0], jobs[i][1]));
-        }
+        // waiting queue - 소요 시간을 제외한 나머지 요소는 최적화에 영향 x
+        Queue<int[]> wq = new PriorityQueue<>((j1, j2) -> j1[1] - j2[1]);
         
-        int time = 0;
-        while (!jq.isEmpty() || !wq.isEmpty()) {
-            // 현재 시간에 대기하는 작업 추가
-            while (!jq.isEmpty() && jq.peek().request <= time) {
-                wq.add(jq.remove());
+        int total = 0;
+        int timer = 0;
+        int idx = 0;
+        int completed = 0;
+        
+        while (completed < jobs.length) {
+            // 현재 시간에 대기중인 작업을 찾아 큐에 추가
+            while (idx < jobs.length && jobs[idx][0] <= timer) {
+                wq.add(jobs[idx]);
+                idx += 1;
             }
             
-            // 대기 작업이 없다면 다음 초로
+            // 현재 대기중인 작업이 없으면 가장 빠른 작업 시간으로 점프
             if (wq.isEmpty()) {
-                time += 1;
+                timer = jobs[idx][0];
                 continue;
             }
             
-            // 대기중인 작업 처리
-            Task now = wq.remove();
-            time += now.cost;
-            answer += time - now.request;
+            int[] job = wq.poll();
+            timer += job[1];
+            total += timer - job[0];
+            completed += 1;
         }
         
-        return answer / jobs.length;
-    }
-    
-    static class Task {
-        
-        int num, request, cost; 
-        
-        Task(int num, int request, int cost) {
-            this.num = num;
-            this.request = request;
-            this.cost = cost;
-        }
+        return total / jobs.length;
     }
 }
